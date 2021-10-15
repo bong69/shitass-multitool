@@ -2,6 +2,9 @@ import sys
 import ctypes
 import requests
 import time
+import threading
+import socket
+import concurrent.futures
 from os import system, name
 from random import randint
 from colorama import Fore
@@ -41,11 +44,74 @@ def shitass_main():
 
 
 
-def pscan():
-	pass
+def pscan(ipaddress, port, threads):
+	print_lock = threading.Lock()
 
-def ip():
-	pass
+	def scan(ipaddress, port):
+		scanner = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		scanner.settimeout(1)
+		try:
+			scanner.connect((ipaddress, port))
+			scanner.close()
+			with print_lock:
+				print()
+				print(f'[{Fore.WHITE}{port}{Fore.RESET}]' + f'{Fore.GREEN}OPEN{Fore.RESET}')
+		except:
+			pass
+
+	with concurrent.futures.ThreadPoolExecutor(max_workers=int(threads)) as executor:
+		for port in range(int(port)):
+			executor.submit(scan, ipaddress, port + 1)
+
+
+
+
+	
+
+
+def ip(ipaddress):
+	shitass_main()
+	URL = f'http://ip-api.com/json/{ipaddress}?fields=query,status,continent,country,regionName,city,district,zip,lat,lon,isp,org,as,reverse,mobile,proxy,hosting'
+
+	r = requests.get(url = URL)
+	data = r.json()
+	status = data['status']
+	if(status == 'fail'):
+		input(f'{Fore.RED}REQUEST FAILED{Fore.RESET}')
+	else:
+		query = data['query']
+		continent = data['continent']
+		country = data['country']
+		region = data['regionName']
+		city = data['city']
+		zipp = data['zip']
+		lat = data['lat']
+		lon = data['lon']
+		isp = data['isp']
+		org = data['org']
+		asn = data['as']
+		mobile = data['mobile']
+		proxy = data['proxy']
+		hosting = data['hosting']
+
+		print(f'''
+		[{Fore.BLUE}IP:{Fore.RESET}]                     {query}
+		[{Fore.BLUE}CONTINENT:{Fore.RESET}]              {continent}		
+		[{Fore.BLUE}COUNTRY:{Fore.RESET}]		  {country}
+		[{Fore.BLUE}REGION:{Fore.RESET}]		  {region}
+		[{Fore.BLUE}CITY:{Fore.RESET}]			  {city}
+		[{Fore.BLUE}ZIP:{Fore.RESET}]			  {zipp}
+		[{Fore.BLUE}LATITUDE:{Fore.RESET}]		  {lat}
+		[{Fore.BLUE}LONGITUDE:{Fore.RESET}]		  {lon}
+		[{Fore.BLUE}ISP:{Fore.RESET}]		          {isp} 
+		[{Fore.BLUE}ORGINIZATION:{Fore.RESET}]	          {org} 	
+		[{Fore.BLUE}AS:{Fore.RESET}]		          {asn}     
+		[{Fore.BLUE}MOBILE?:{Fore.RESET}]		  {mobile} 
+		[{Fore.BLUE}PROXY?:{Fore.RESET}]		  {proxy} 
+		[{Fore.BLUE}HOSTING?:{Fore.RESET}]		  {hosting} 
+
+
+		''')
 
 def tokenInfo(token):
 	shitass_main()
@@ -57,17 +123,21 @@ def tokenInfo(token):
 			phone = r.json()['phone']
 			email = r.json()['email']
 			mfa = r.json()['mfa_enabled']
+			if(mfa == 'false'):
+				mf = 'Disabled'
+			else:
+				mf = 'Enabled'
 			print(f'''
-			[{Fore.BLUE}User Name{Fore.RESET}]       {userName}
-			[{Fore.BLUE}User ID{Fore.RESET}]         {userID}
-			[{Fore.BLUE}2 Factor{Fore.RESET}]        {mfa}
-			[{Fore.BLUE}Email{Fore.RESET}]           {email}
-			[{Fore.BLUE}Phone number{Fore.RESET}]    {phone}
-			[{Fore.BLUE}Token{Fore.RESET}]           {token}
+			[{Fore.BLUE}USERNAME:{Fore.RESET}]        {userName}
+			[{Fore.BLUE}USERID:{Fore.RESET}]          {userID}
+			[{Fore.BLUE}2FA:{Fore.RESET}]             {mf}
+			[{Fore.BLUE}EMAIL:{Fore.RESET}]           {email}
+			[{Fore.BLUE}PHONE NUMBER:{Fore.RESET}]    {phone}
+			[{Fore.BLUE}TOKEN:{Fore.RESET}]           {token}
 
 			''')
 	else:
-		print(f'{Fore.RED}{token} is invalid{Fore.RESET}')
+		print(f'{Fore.RED}{token} IS INVALID{Fore.RESET}')
 
 def tokenCheck():
 	shitass_main()
@@ -114,11 +184,15 @@ def cmds():
 			f"   ╠═[{Fore.BLUE}X{Fore.RESET}] {Fore.RED}Invalid{Fore.RESET} Option")
 		cmds()
 	if command == "1":
-		pscan()
+		print(f'[{Fore.BLUE}>{Fore.RESET}] ENTER IP/DOMAIN', end=''); ipaddress = input('  :  ')
+		print(f'[{Fore.BLUE}>{Fore.RESET}] ENTER PORT RANGE EX: 1000', end=''); port = input('  :  ')
+		print(f'[{Fore.BLUE}>{Fore.RESET}] ENTER THREAD COUNT', end=''); threads = input('  :  ')
+		pscan(ipaddress, port, threads)
 	elif command == "2":
-		ip()
+		print(f'[{Fore.BLUE}>{Fore.RESET}] ENTER IP/DOMAIN', end=''); ipaddress = input('  :  ')
+		ip(ipaddress)
 	elif command == "3":
-		print(f'[{Fore.BLUE}>{Fore.RESET}] Enter Account token', end=''); token = input('  :  ')
+		print(f'[{Fore.BLUE}>{Fore.RESET}] ENTER ACCOUNT TOKEN', end=''); token = input('  :  ')
 		tokenInfo(token)
 	elif command == "4":
 		tokenCheck()
