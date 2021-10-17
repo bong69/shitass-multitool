@@ -176,7 +176,7 @@ def webhookfuck(link, name, message, amount):
 				link,
 				json={
 					"content": str(message),
-					"name": str(name),
+					"username": str(name),
 					"avatar_url": "https://i.kym-cdn.com/entries/icons/original/000/018/166/pakalu.png" # change this shit if u want
 				}
 			)
