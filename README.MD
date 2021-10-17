@@ -21,3 +21,5 @@ Logout   | Same as exit
 - [x] Proxy Generator
 - - - 
 To use the token checker make a file called "tokens.txt" in the directory and put your tokens in there. If a tokens.txt is not found the program ***WILL*** break.
+
+To suggest a feature to be added, make an issue and ill check it. To add something just make a pull request and ill review it. 
