@@ -23,7 +23,7 @@ def shitass_toucan(TOKEN):
 	headers = {
 		'Authorization': f'{TOKEN}'
 	}
-	poopies = requests.get('https://discordapp.com/api/v6/auth/login', headers=headers)
+	poopies = requests.get('https://discordapp.com/api/v9/auth/login', headers=headers)
 	try:
 		if poopies.status_code == 200:
 			fortnite = 0
@@ -257,7 +257,7 @@ def webhookfuck(link, name, message, amount):
 def tokenInfo(token):
 	shitass_main()
 	headers = {'Authorization': token, 'Content-Type': 'application/json'}
-	req = requests.get('https://discord.com/api/v6/users/@me', headers=headers)
+	req = requests.get('https://discord.com/api/v9/users/@me', headers=headers)
 	if req.status_code == 200:
 			userName = req.json()['username'] + '#' + req.json()['discriminator']
 			userID = req.json()['id']
@@ -292,7 +292,7 @@ def tokencheck():
 			headers = {
 				'Authorization': f'{token}'
 			}
-			src = requests.get('https://discordapp.com/api/v6/auth/login', headers=headers)
+			src = requests.get('https://discordapp.com/api/v9/auth/login', headers=headers)
 			try:
 				if src.status_code == 200:
 					print("[✔️] VALID TOKEN > " + token)
